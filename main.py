@@ -76,6 +76,81 @@ class User(IUser):
     
     def __init__(self, name: str):
         # Використовуємо setter, щоб одразу застосувати валідацію
+from abc import ABC, abstractmethod
+from typing import List  
+
+class IUser(ABC):
+    @property
+    @abstractmethod
+    def name(self) -> str:
+        """Повертає ім'я користувача"""
+        pass
+
+    @name.setter
+    @abstractmethod
+    def name(self, value: str):
+        """Встановлює ім'я користувача"""
+        pass
+
+    @abstractmethod
+    def display_info(self):
+        """Виводить інформацію про користувача"""
+        pass
+
+
+class ITask(ABC):
+    @property
+    @abstractmethod
+    def description(self) -> str:
+        """Опис завдання"""
+        pass
+
+    @description.setter
+    @abstractmethod
+    def description(self, value: str):
+        pass
+
+    @property
+    @abstractmethod
+    def is_completed(self) -> bool:
+        """Статус виконання"""
+        pass
+
+    @is_completed.setter
+    @abstractmethod
+    def is_completed(self, value: bool):
+        pass
+
+    @abstractmethod
+    def complete(self):
+        """Позначити завдання виконаним"""
+        pass
+
+
+class IProject(ABC):
+    @property
+    @abstractmethod
+    def title(self) -> str:
+        """Назва проєкту"""
+        pass
+
+    @title.setter
+    @abstractmethod
+    def title(self, value: str):
+        pass
+
+    @abstractmethod
+    def add_task(self, task: ITask):
+        """Додає завдання в проєкт"""
+        pass
+
+# --- РЕАЛІЗАЦІЯ ---
+
+class User(IUser):
+    """ Реалізація інтерфейсу IUser. """
+    
+    def __init__(self, name: str):
+        self._name = None
         self.name = name
 
     @property
@@ -107,6 +182,11 @@ class Task(ITask):
         self.description = description
         
         # За замовчуванням завдання НЕ виконано
+    """ Реалізація інтерфейсу ITask. """
+    
+    def __init__(self, description: str):
+        self._description = None
+        self.description = description
         self._is_completed = False
 
     @property
@@ -141,6 +221,9 @@ class Task(ITask):
 
     def __str__(self):
         # Текстове подання задачі        
+        self.is_completed = True
+
+    def __str__(self):
         status = "Виконано" if self.is_completed else "Не Виконано"
         return f"{self.description} — {status}"
 
@@ -163,6 +246,15 @@ class Project(IProject):
     @property
     def title(self) -> str:
         # Повертаємо назву проекту
+    """ Реалізація інтерфейсу IProject. """
+    
+    def __init__(self, title: str):
+        self._title = None
+        self.title = title
+        self._tasks: List[ITask] = [] # Тепер List працюватиме коректно
+
+    @property
+    def title(self) -> str:
         return self._title
 
     @title.setter
