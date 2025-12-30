@@ -1,5 +1,7 @@
 if __name__ == '__main__':
     from abc import ABC, abstractmethod
+    from typing import List
+
 
     class IUser(ABC):
         @property
@@ -191,3 +193,6 @@ class Project(IProject):
 
         for idx, task in enumerate(self._tasks, start=1):
             print(f"{idx}. {task}")
+
+    def count_completed_tasks(self) -> int:
+        return len([t for t in self._tasks if t.is_completed])
