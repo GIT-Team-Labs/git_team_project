@@ -145,6 +145,11 @@ class Task(ITask):
         # Текстове подання задачі        
         status = "Виконано" if self.is_completed else "Не Виконано"
         return f"{self.description} — {status}"
+    
+    # Oтримання списку завдань
+    def get_tasks(self) -> List[ITask]:
+        return list(self._tasks)
+
 
 
 class Project(IProject):
@@ -155,12 +160,11 @@ class Project(IProject):
     - Містить список завдань
     - дозволяє додавати завдання """
     
-    def __init__(self, title: str):
+    def __init__(self, title: str, tasks: List[ITask] | None = None):
         # Встановлюємо назву проекту
         self.title = title
-        
         # Зберігаємо завдання у списку
-        self._tasks: List[ITask] = []
+        self._tasks = tasks if tasks is not None else []
 
     @property
     def title(self) -> str:
